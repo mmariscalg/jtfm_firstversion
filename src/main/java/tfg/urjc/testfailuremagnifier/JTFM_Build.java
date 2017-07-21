@@ -7,12 +7,15 @@
 package tfg.urjc.testfailuremagnifier;
 
 import hudson.Extension;
+import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
-import hudson.model.BuildListener;
+import hudson.model.Run;
+import hudson.model.TaskListener;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
+import java.io.IOException;
+import jenkins.tasks.SimpleBuildStep;
 import net.sf.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
@@ -21,39 +24,47 @@ import org.kohsuke.stapler.StaplerRequest;
  *
  * @author mario.mariscal
  */
-public class JTFM_Build extends Builder{
+public class JTFM_Build extends Builder implements SimpleBuildStep{
     
-    private final String task;
+    private final boolean task;
     
     // Fields in config.jelly must match the parameter names in the "DataBoundConstructor"
     @DataBoundConstructor
-    private JTFM_Build(String task){
+    public JTFM_Build(boolean task){
         this.task = task;
     }
 
     // We will use this from the <tt>config.jelly</tt>.
-    public String getTask() {
+    public boolean getTask() {
         return task;
     }
 
-    @Override
-    public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener) {
-        // This is where you 'build' the project.
-        // Since this is a dummy, we just say 'hello world' and call that a build.
-        // This also shows how you can consult the global configuration of the builder
-        if (getDescriptor().getUseTest())
-            listener.getLogger().println("Use test selected");
-        else
-            listener.getLogger().println("Use test does not selected");
-        return true;
-    }    
-    
     // Overridden for better type safety.
     // If your plugin doesn't really define any property on Descriptor,
     // you don't have to do this.
     @Override
     public JTFM_Build.Descriptor getDescriptor() {
         return (JTFM_Build.Descriptor)super.getDescriptor();
+    }
+
+    public void perform(Run<?, ?> run, FilePath fp, Launcher lnchr, TaskListener tl) throws InterruptedException, IOException {
+                // This is where you 'build' the project.
+        // Since this is a dummy, we just say 'hello world' and call that a build.
+        // This also shows how you can consult the global configuration of the builder
+        if (getDescriptor().getUseTest()){
+            tl.getLogger().println("Use test");
+            if (getTask())
+                tl.getLogger().println("Task ON");
+            else
+                tl.getLogger().println("Task OFF");
+        }
+        else{
+            tl.getLogger().println("Not Use test");
+            if (getTask())
+                tl.getLogger().println("Task ON");
+            else
+                tl.getLogger().println("Task OFF");
+        }
     }
     
     @Extension
@@ -67,9 +78,17 @@ public class JTFM_Build extends Builder{
          */
         private boolean useTest;
         
+        /**
+         * In order to load the persisted global configuration, you have to 
+         * call load() in the constructor.
+         */
+        public Descriptor() {
+            load();
+        }
+        
         @Override
         public boolean isApplicable(Class<? extends AbstractProject> jobType) {
-            return true;
+            return getUseTest();
         }
  
         @Override
@@ -88,6 +107,12 @@ public class JTFM_Build extends Builder{
             return super.configure(req,formData);
         }
         
+         /**
+         * This method returns true if the global configuration says we should speak French.
+         *
+         * The method name is bit awkward because global.jelly calls this method to determine
+         * the initial state of the checkbox by the naming convention.
+         */
         public boolean getUseTest() {
             return useTest;
         }

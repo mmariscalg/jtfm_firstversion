@@ -8,6 +8,7 @@
 
   <groupId>tfg.urjc</groupId>
   <artifactId>TestFailureMagnifier</artifactId>
+  <url>https://github.com/mmariscalg/jenkins-test-failure-magnifier.git</url>
   <version>1.0-SNAPSHOT</version>
   <packaging>hpi</packaging>
 
@@ -25,5 +26,12 @@
       <url>http://repo.jenkins-ci.org/public/</url>
     </pluginRepository>
   </pluginRepositories>
-
+    <dependencies>
+        <dependency>
+            <groupId>org.jenkins-ci.main</groupId>
+            <artifactId>jenkins-core</artifactId>
+            <version>2.69</version>
+            <type>jar</type>
+        </dependency>
+    </dependencies>
 </project>

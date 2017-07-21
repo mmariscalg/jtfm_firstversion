@@ -9,7 +9,7 @@
     Creates a text field that shows the value of the "name" property.
     When submitted, it will be passed to the corresponding constructor parameter.
   -->
-  <f:entry title="Check tests?" description="If checked, tests run will be checked.">
-    <f:checkbox name="task" checked="${it.start}"/>
+  <f:entry title="Enable check tests" description="If checked, tests run will be checked." field="task">
+    <f:checkbox/>
   </f:entry>
 </j:jelly>
