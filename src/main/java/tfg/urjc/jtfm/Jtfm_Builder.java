@@ -1,7 +1,6 @@
 package tfg.urjc.jtfm;
 import hudson.Launcher;
 import hudson.Extension;
-import hudson.util.FormValidation;
 import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
 import hudson.model.AbstractProject;
@@ -10,10 +9,6 @@ import hudson.tasks.BuildStepDescriptor;
 import net.sf.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.QueryParameter;
-
-import javax.servlet.ServletException;
-import java.io.IOException;
 
 /**
  * Sample {@link Builder}.
@@ -42,24 +37,22 @@ public class Jtfm_Builder extends Builder {
         this.task = task;
     }
 
-    /**
-     * We'll use this from the <tt>config.jelly</tt>.
-     */
+    //We'll use this from the <tt>config.jelly</tt>.
     public String getTask() {
         return task;
     }
 
     @Override
     public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener) {
-        // This is where you 'build' the project.
-        // Since this is a dummy, we just say 'hello world' and call that a build.
+        // This is where project is 'build'.
 
         // This also shows how you can consult the global configuration of the builder
+        
         if (getDescriptor().getUseTestFM())
-            listener.getLogger().println("Bonjour, "+task+"!");
-        else
-            listener.getLogger().println("Hello, "+task+"!");
+            System.out.println("Test-failure-magnifier project is build.");
+
         return true;
+        
     }
 
     // Overridden for better type safety.
@@ -92,8 +85,7 @@ public class Jtfm_Builder extends Builder {
         /**
          * Performs on-the-fly validation of the form field 'name'.
          *
-         * @param value
-         *      This parameter receives the value that the user has typed.
+         * @param aClass
          * @return
          *      Indicates the outcome of the validation. This is sent to the browser.
          */
@@ -106,14 +98,17 @@ public class Jtfm_Builder extends Builder {
 //            return FormValidation.ok();
 //        }
 
+        @Override
         public boolean isApplicable(Class<? extends AbstractProject> aClass) {
             // Indicates that this builder can be used with all kinds of project types 
-            return true;
+            return getUseTestFM();
         }
 
         /**
          * This human readable name is used in the configuration screen.
+         * @return 
          */
+        @Override
         public String getDisplayName() {
             return "jenkins-test-failure-magnifier";
         }
@@ -134,6 +129,7 @@ public class Jtfm_Builder extends Builder {
          *
          * The method name is bit awkward because global.jelly calls this method to determine
          * the initial state of the checkbox by the naming convention.
+         * @return 
          */
         public boolean getUseTestFM() {
             return useTestFM;
