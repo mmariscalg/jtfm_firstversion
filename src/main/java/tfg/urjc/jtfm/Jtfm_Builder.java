@@ -13,7 +13,7 @@ import org.kohsuke.stapler.StaplerRequest;
 /**
  * Sample {@link Builder}.
  *
- * <p>
+ * 
  * When the user configures the project and enables this builder,
  * {@link DescriptorImpl#newInstance(StaplerRequest)} is invoked
  * and a new {@link Jtfm_Builder} is created. The created
@@ -21,7 +21,6 @@ import org.kohsuke.stapler.StaplerRequest;
  * XStream, so this allows you to use instance fields (like {@link #name})
  * to remember the configuration.
  *
- * <p>
  * When a build is performed, the {@link #perform(AbstractBuild, Launcher, BuildListener)}
  * method will be invoked. 
  *
@@ -31,20 +30,20 @@ public class Jtfm_Builder extends Builder {
 
     private final String task;
 
-    // Fields in config.jelly must match the parameter task in the "DataBoundConstructor"
+    // Fields in config.jelly must match the parameter task in the DataBoundConstructor
     @DataBoundConstructor
     public Jtfm_Builder(String task) {
         this.task = task;
     }
 
-    //We'll use this from the <tt>config.jelly</tt>.
+    //We will use this from the config.jelly.
     public String getTask() {
         return task;
     }
 
     @Override
     public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener) {
-        // This is where project is 'build'.
+        // This is where project is build.
 
         // This also shows how you can consult the global configuration of the builder
         
@@ -56,8 +55,8 @@ public class Jtfm_Builder extends Builder {
     }
 
     // Overridden for better type safety.
-    // If your plugin doesn't really define any property on Descriptor,
-    // you don't have to do this.
+    // If your plugin does not really define any property on Descriptor,
+    // you do not have to do this.
     @Override
     public DescriptorImpl getDescriptor() {
         return (DescriptorImpl)super.getDescriptor();
@@ -67,8 +66,7 @@ public class Jtfm_Builder extends Builder {
      * Descriptor for {@link Jtfm_Builder}. Used as a singleton.
      * The class is marked as public so that it can be accessed from views.
      *
-     * <p>
-     * See <tt>src/main/resources/hudson/plugins/hello_world/Jtfm_Builder/*.jelly</tt>
+     * See src/main/resources/hudson/plugins/hello_world/Jtfm_Builder/*.jelly
      * for the actual HTML fragment for the configuration screen.
      */
     @Extension // This indicates to Jenkins that this is an implementation of an extension point.
@@ -77,8 +75,7 @@ public class Jtfm_Builder extends Builder {
          * To persist global configuration information,
          * simply store it in a field and call save().
          *
-         * <p>
-         * If you don't want fields to be persisted, use <tt>transient</tt>.
+         * If you don't want fields to be persisted, use transient.
          */
         private boolean useTestFM;
 
@@ -118,8 +115,8 @@ public class Jtfm_Builder extends Builder {
             // To persist global configuration information,
             // set that to properties and call save().
             useTestFM = formData.getBoolean("useTestFM");
-            // ^Can also use req.bindJSON(this, formData);
-            //  (easier when there are many fields; need set* methods for this, like setUseTestFM)
+            // Can also use req.bindJSON(this, formData);
+            // (easier when there are many fields; need set* methods for this, like setUseTestFM)
             save();
             return super.configure(req,formData);
         }

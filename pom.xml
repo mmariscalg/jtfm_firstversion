@@ -5,13 +5,28 @@
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>1.645</version><!-- which version of Jenkins is this plugin built against? -->
+        <version>2.6</version><!-- which version of Jenkins is this plugin built against? -->
     </parent>
 
     <groupId>tfg.urjc</groupId>
     <artifactId>jtfm</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>hpi</packaging>
+    
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
+    </properties>
+    
+    <dependencies>
+        <dependency>
+            <groupId>org.jenkins-ci.main</groupId>
+            <artifactId>jenkins-war</artifactId>
+            <type>war</type>
+            <version>2.6<!-- replace this with the version you want--></version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
     <!-- get every artifact through repo.jenkins-ci.org, which proxies all the artifacts that we need -->
     <repositories>
@@ -30,13 +45,13 @@
 
     <!--<build>
 	<plugins>
-<plugin>
-    <groupId>org.jenkins-ci.tools</groupId>
-    <artifactId>maven-hpi-plugin</artifactId>
-    <configuration>
-        <disabledTestInjection>true</disabledTestInjection>
-    </configuration>
-</plugin>
+            <plugin>
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-javadoc-plugin</artifactId>
+      <version>2.9.1</version>
+    </plugin>
+            </plugin>
 	</plugins>
     </build>-->
 </project>
