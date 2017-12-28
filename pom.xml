@@ -10,7 +10,7 @@
 
     <groupId>tfg.urjc</groupId>
     <artifactId>jtfm</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>hpi</packaging>
     
     <properties>

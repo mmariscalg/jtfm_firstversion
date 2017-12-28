@@ -1,18 +1,24 @@
 package tfg.urjc.jtfm;
 import hudson.Launcher;
 import hudson.Extension;
+import hudson.console.ConsoleNote;
 import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
 import hudson.model.AbstractProject;
+import hudson.model.Build;
+import hudson.model.Cause;
+import hudson.model.Result;
 import hudson.tasks.Builder;
 import hudson.tasks.BuildStepDescriptor;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.util.List;
 import net.sf.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
 
 /**
- * Sample {@link Builder}.
- *
  * 
  * When the user configures the project and enables this builder,
  * {@link DescriptorImpl#newInstance(StaplerRequest)} is invoked
@@ -24,32 +30,32 @@ import org.kohsuke.stapler.StaplerRequest;
  * When a build is performed, the {@link #perform(AbstractBuild, Launcher, BuildListener)}
  * method will be invoked. 
  *
- * @author Kohsuke Kawaguchi
  */
-public class Jtfm_Builder extends Builder {
+public class Jtfm_Builder extends Builder implements BuildListener{
 
-    private final String task;
+    private final boolean task;
 
     // Fields in config.jelly must match the parameter task in the DataBoundConstructor
     @DataBoundConstructor
-    public Jtfm_Builder(String task) {
+    public Jtfm_Builder(boolean task) {
         this.task = task;
     }
 
-    //We will use this from the config.jelly.
-    public String getTask() {
+    // We will use this from the config.jelly.
+    public boolean getTask() {
         return task;
     }
 
     @Override
-    public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener) {
+    public boolean perform(Build<?, ?> build, Launcher launcher, BuildListener listener) {
         // This is where project is build.
 
         // This also shows how you can consult the global configuration of the builder
         
-        if (getDescriptor().getUseTestFM())
-            System.out.println("Test-failure-magnifier project is build.");
+        if (getTask())
+            listener.getLogger().println("\n\n\n----------> Test-failure-magnifier is turned on.\n\n\n");
 
+        
         return true;
         
     }
@@ -62,11 +68,57 @@ public class Jtfm_Builder extends Builder {
         return (DescriptorImpl)super.getDescriptor();
     }
 
+    @Override
+    public void started(List<Cause> causes) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void finished(Result result) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public PrintStream getLogger() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void annotate(ConsoleNote ann) throws IOException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void hyperlink(String url, String text) throws IOException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public PrintWriter error(String msg) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public PrintWriter error(String format, Object... args) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public PrintWriter fatalError(String msg) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public PrintWriter fatalError(String format, Object... args) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    
     /**
      * Descriptor for {@link Jtfm_Builder}. Used as a singleton.
      * The class is marked as public so that it can be accessed from views.
      *
-     * See src/main/resources/hudson/plugins/hello_world/Jtfm_Builder/*.jelly
+     * See src/main/resources/hudson/tfg/urjc/jtfm/Jtfm_Builder/*.jelly
      * for the actual HTML fragment for the configuration screen.
      */
     @Extension // This indicates to Jenkins that this is an implementation of an extension point.
@@ -78,6 +130,21 @@ public class Jtfm_Builder extends Builder {
          * If you don't want fields to be persisted, use transient.
          */
         private boolean useTestFM;
+        
+        public DescriptorImpl() {
+            load();
+        }
+        
+        /**
+         * This method returns true if on the global configuration plugin is turned on.
+         *
+         * global.jelly calls this method to determine
+         * the initial state of the checkbox by the naming convention.
+         * @return 
+         */
+        public boolean getUseTestFM() {
+            return useTestFM;
+        }
 
         /**
          * Performs on-the-fly validation of the form field 'name'.
@@ -119,17 +186,6 @@ public class Jtfm_Builder extends Builder {
             // (easier when there are many fields; need set* methods for this, like setUseTestFM)
             save();
             return super.configure(req,formData);
-        }
-
-        /**
-         * This method returns true if the global configuration says we should speak French.
-         *
-         * The method name is bit awkward because global.jelly calls this method to determine
-         * the initial state of the checkbox by the naming convention.
-         * @return 
-         */
-        public boolean getUseTestFM() {
-            return useTestFM;
         }
     }
 }

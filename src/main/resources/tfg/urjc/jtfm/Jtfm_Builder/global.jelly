@@ -13,8 +13,7 @@
     so it should be straightforward to find them.
   -->
   <f:section title="jenkins-test-failure-magnifier">
-    <f:entry title="Test-failure-magnifier" field="useTestFM"
-      description="Turn on jenkins-test-failure-magnifier as Build step.">
+    <f:entry title="Test-failure-magnifier" field="useTestFM" description="Turn on jenkins-test-failure-magnifier as Build step.">
       <f:checkbox />
     </f:entry>
   </f:section>
